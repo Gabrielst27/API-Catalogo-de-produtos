@@ -21,6 +21,22 @@
   },
   {
     "ContainingType": "APICatalogo.Controllers.ProdutosController",
+    "Method": "Post",
+    "RelativePath": "Produtos",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "produto",
+        "Type": "APICatalogo.Models.Produto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "APICatalogo.Controllers.ProdutosController",
     "Method": "GetById",
     "RelativePath": "Produtos/{id}",
     "HttpMethod": "GET",
