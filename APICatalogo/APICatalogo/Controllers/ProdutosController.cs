@@ -1,6 +1,7 @@
 ﻿using APICatalogo.Context;
 using APICatalogo.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace APICatalogo.Controllers
 {
@@ -15,7 +16,7 @@ namespace APICatalogo.Controllers
             _context = context;
         }
 
-        //Buscar objeto da classe Produto pelo id
+        //Buscar objeto da classe Produto por id
         [HttpGet("{id:int}", Name = "ObterProduto")]
         public ActionResult<Produto> GetById(int id)
         {
@@ -48,7 +49,39 @@ namespace APICatalogo.Controllers
             _context.Produtos.Add(produto);
             _context.SaveChanges();
 
-            return new CreatedAtRouteResult ("ObterProduto", new {id = produto.ProdutoId}, produto);
+            return new CreatedAtRouteResult("ObterProduto", new { id = produto.ProdutoId }, produto);
+        }
+
+        //Atualizar Produto por id
+        [HttpPut("{id:int}")]
+        public ActionResult Put(int id, Produto produto)
+        {
+            if (id != produto.ProdutoId)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(produto).State = EntityState.Modified;
+            _context.SaveChanges();
+
+            return Ok(produto);
+        }
+
+        //Deletar Produto por id
+        [HttpDelete("{id:int}")]
+        public ActionResult Delete(int id)
+        {
+            var produto = _context.Produtos.Find(id);
+
+            if (produto is null)
+            {
+                return NotFound();
+            }
+
+            _context.Remove(produto);
+            _context.SaveChanges();
+
+            return Ok(produto);
         }
     }
 }
