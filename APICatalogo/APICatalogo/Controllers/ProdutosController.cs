@@ -37,7 +37,7 @@ namespace APICatalogo.Controllers
             return _context.Produtos.ToList();
         }
 
-        //Inserir novo objeto da classe Produto
+        //Inserir novo Produto
         [HttpPost]
         public ActionResult Post(Produto produto)
         {
@@ -61,7 +61,7 @@ namespace APICatalogo.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(produto).State = EntityState.Modified;
+            _context.Update(produto);
             _context.SaveChanges();
 
             return Ok(produto);
@@ -75,7 +75,7 @@ namespace APICatalogo.Controllers
 
             if (produto is null)
             {
-                return NotFound();
+                return NotFound("Produto não encontrado");
             }
 
             _context.Remove(produto);
