@@ -20,7 +20,7 @@ namespace APICatalogo.Controllers
         [HttpGet("{id:int}", Name = "ObterProduto")]
         public ActionResult<Produto> GetById(int id)
         {
-            var produto = _context.Produtos.Find(id);
+            var produto = _context.Produtos.AsNoTracking().FirstOrDefault(p => p.ProdutoId == id);
 
             if (produto is null)
             {
@@ -32,9 +32,9 @@ namespace APICatalogo.Controllers
 
         //Buscar todos os objetos da classe Produto
         [HttpGet]
-        public ActionResult<IEnumerable<Produto>> GetAll()
+        public ActionResult<IEnumerable<Produto>> GetAll(int top)
         {
-            return _context.Produtos.ToList();
+            return _context.Produtos.AsNoTracking().Take(top).ToList();
         }
 
         //Inserir novo Produto

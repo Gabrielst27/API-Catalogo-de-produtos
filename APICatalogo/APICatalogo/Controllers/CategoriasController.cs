@@ -21,7 +21,8 @@ namespace APICatalogo.Controllers
         [HttpGet("{id:int}")]
         public ActionResult<Categoria> GetById(int id)
         {
-            var categoria = _context.Categorias.Find(id);
+            var categoria = _context.Categorias.AsNoTracking()
+                .FirstOrDefault(p => p.CategoriaId == id);
 
             if (categoria is null)
             {
@@ -33,16 +34,17 @@ namespace APICatalogo.Controllers
 
         //Procurar todos os objetos da classe Categoria
         [HttpGet]
-        public ActionResult<IEnumerable<Categoria>> GetAll()
+        public ActionResult<IEnumerable<Categoria>> GetAll(int top)
         {
-            return _context.Categorias.ToList();
+            return _context.Categorias.AsNoTracking().Take(top).ToList();
         }
 
         //Procurar todas os objetos da classe Categoria e Produto
         [HttpGet("produtos")]
-        public ActionResult<IEnumerable<Categoria>> GetCatProd()
+        public ActionResult<IEnumerable<Categoria>> GetCatProd(int topCategoria, int topProduto)
         {
-            return _context.Categorias.Include(p => p.Produtos).ToList();
+            return _context.Categorias.AsNoTracking().Include(p => p.Produtos
+                .Take(topProduto)).Take(topCategoria).ToList();
         }
 
         //Inserir nova Categoria
