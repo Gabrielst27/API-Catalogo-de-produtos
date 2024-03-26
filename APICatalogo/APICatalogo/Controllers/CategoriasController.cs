@@ -1,6 +1,7 @@
 ﻿using APICatalogo.Context;
 using APICatalogo.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace APICatalogo.Controllers
 {
@@ -37,6 +38,13 @@ namespace APICatalogo.Controllers
             return _context.Categorias.ToList();
         }
 
+        //Procurar todas os objetos da classe Categoria e Produto
+        [HttpGet("produtos")]
+        public ActionResult<IEnumerable<Categoria>> GetCatProd()
+        {
+            return _context.Categorias.Include(p => p.Produtos).ToList();
+        }
+
         //Inserir nova Categoria
         [HttpPost]
         public ActionResult Post(Categoria categoria)
@@ -68,7 +76,7 @@ namespace APICatalogo.Controllers
         }
 
         //Deletar Categoria por id
-        [HttpDelete]
+        [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {
             var categoria = _context.Categorias.Find(id);
