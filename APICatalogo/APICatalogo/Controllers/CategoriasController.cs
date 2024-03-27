@@ -21,77 +21,125 @@ namespace APICatalogo.Controllers
         [HttpGet("{id:int}")]
         public ActionResult<Categoria> GetById(int id)
         {
-            var categoria = _context.Categorias.AsNoTracking()
-                .FirstOrDefault(p => p.CategoriaId == id);
-
-            if (categoria is null)
+            try
             {
-                return NotFound();
-            }
+                var categoria = _context.Categorias.AsNoTracking()
+                    .FirstOrDefault(p => p.CategoriaId == id);
 
-            return categoria;
+                if (categoria is null)
+                {
+                    return NotFound("Categoria não encontrada");
+                }
+
+                return categoria;
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Ocorreu um erro no tratamento da sua solicitação. Contate o suporte.");
+            }
         }
 
         //Procurar todos os objetos da classe Categoria
         [HttpGet]
         public ActionResult<IEnumerable<Categoria>> GetAll(int top)
         {
-            return _context.Categorias.AsNoTracking().Take(top).ToList();
+            try
+            {
+                return _context.Categorias.AsNoTracking().Take(top).ToList();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Ocorreu um erro no tratamento da sua solicitação. Contate o suporte.");
+            }
         }
 
         //Procurar todas os objetos da classe Categoria e Produto
         [HttpGet("produtos")]
         public ActionResult<IEnumerable<Categoria>> GetCatProd(int topCategoria, int topProduto)
         {
-            return _context.Categorias.AsNoTracking().Include(p => p.Produtos
-                .Take(topProduto)).Take(topCategoria).ToList();
+            try
+            {
+                return _context.Categorias.AsNoTracking().Include(p => p.Produtos
+                    .Take(topProduto)).Take(topCategoria).ToList();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Ocorreu um erro no tratamento da sua solicitação. Contate o suporte.");
+            }
         }
 
         //Inserir nova Categoria
         [HttpPost]
         public ActionResult Post(Categoria categoria)
         {
-            if (categoria is null)
+            try
             {
-                return BadRequest();
+                if (categoria is null)
+                {
+                    return BadRequest("Dados inválidos");
+                }
+
+                _context.Categorias.Add(categoria);
+                _context.SaveChanges();
+
+                return Ok(categoria);
             }
-
-            _context.Categorias.Add(categoria);
-            _context.SaveChanges();
-
-            return Ok(categoria);
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Ocorreu um erro no tratamento da sua solicitação. Contate o suporte.");
+            }
         }
 
         //Atualizar Categoria por id
         [HttpPut("{id:int}")]
         public ActionResult Put(int id, Categoria categoria)
         {
-            if (id != categoria.CategoriaId)
+            try
             {
-                return BadRequest();
+                if (id != categoria.CategoriaId)
+                {
+                    return BadRequest("Dados inválidos");
+                }
+
+                _context.Update(categoria);
+                _context.SaveChanges();
+
+                return Ok(categoria);
             }
-
-            _context.Update(categoria);
-            _context.SaveChanges();
-
-            return Ok(categoria);
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Ocorreu um erro no tratamento da sua solicitação. Contate o suporte.");
+            }
         }
 
         //Deletar Categoria por id
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {
-            var categoria = _context.Categorias.Find(id);
-
-            if (categoria is null)
+            try
             {
-                return NotFound("Categoria não encontrada");
+                var categoria = _context.Categorias.Find(id);
+
+                if (categoria is null)
+                {
+                    return NotFound("Categoria não encontrada");
+                }
+
+                _context.Remove(categoria);
+                _context.SaveChanges();
+
+                return Ok(categoria);
             }
-
-            _context.Remove(categoria);
-            _context.SaveChanges();
-
-            return Ok(categoria);
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Ocorreu um erro no tratamento da sua solicitação. Contate o suporte.");
+            }
         }
     }
 }
