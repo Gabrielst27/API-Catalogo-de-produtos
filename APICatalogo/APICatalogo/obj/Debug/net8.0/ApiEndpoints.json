@@ -2,7 +2,7 @@
   {
     "ContainingType": "APICatalogo.Controllers.CategoriasController",
     "Method": "GetAll",
-    "RelativePath": "Categorias",
+    "RelativePath": "api/Categorias",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -28,7 +28,7 @@
   {
     "ContainingType": "APICatalogo.Controllers.CategoriasController",
     "Method": "Post",
-    "RelativePath": "Categorias",
+    "RelativePath": "api/Categorias",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -44,7 +44,7 @@
   {
     "ContainingType": "APICatalogo.Controllers.CategoriasController",
     "Method": "GetById",
-    "RelativePath": "Categorias/{id}",
+    "RelativePath": "api/Categorias/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -70,7 +70,7 @@
   {
     "ContainingType": "APICatalogo.Controllers.CategoriasController",
     "Method": "Put",
-    "RelativePath": "Categorias/{id}",
+    "RelativePath": "api/Categorias/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -91,7 +91,7 @@
   {
     "ContainingType": "APICatalogo.Controllers.CategoriasController",
     "Method": "Delete",
-    "RelativePath": "Categorias/{id}",
+    "RelativePath": "api/Categorias/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -106,19 +106,39 @@
   },
   {
     "ContainingType": "APICatalogo.Controllers.CategoriasController",
+    "Method": "GetFirst",
+    "RelativePath": "api/Categorias/primeiro",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "APICatalogo.Models.Categoria",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "APICatalogo.Controllers.CategoriasController",
     "Method": "GetCatProd",
-    "RelativePath": "Categorias/produtos",
+    "RelativePath": "api/Categorias/produtos",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "top",
+        "Name": "topCategoria",
         "Type": "System.Int32",
         "IsRequired": false
       },
       {
-        "Name": "topProd",
+        "Name": "topProduto",
         "Type": "System.Int32",
         "IsRequired": false
       }
@@ -138,7 +158,7 @@
   {
     "ContainingType": "APICatalogo.Controllers.ProdutosController",
     "Method": "GetAll",
-    "RelativePath": "Produtos",
+    "RelativePath": "api/Produtos",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -164,7 +184,7 @@
   {
     "ContainingType": "APICatalogo.Controllers.ProdutosController",
     "Method": "Post",
-    "RelativePath": "Produtos",
+    "RelativePath": "api/Produtos",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -180,7 +200,7 @@
   {
     "ContainingType": "APICatalogo.Controllers.ProdutosController",
     "Method": "GetById",
-    "RelativePath": "Produtos/{id}",
+    "RelativePath": "api/Produtos/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -206,7 +226,7 @@
   {
     "ContainingType": "APICatalogo.Controllers.ProdutosController",
     "Method": "Put",
-    "RelativePath": "Produtos/{id}",
+    "RelativePath": "api/Produtos/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -227,7 +247,7 @@
   {
     "ContainingType": "APICatalogo.Controllers.ProdutosController",
     "Method": "Delete",
-    "RelativePath": "Produtos/{id}",
+    "RelativePath": "api/Produtos/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -239,5 +259,25 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "APICatalogo.Controllers.ProdutosController",
+    "Method": "GetFirst",
+    "RelativePath": "api/Produtos/primeiro",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "APICatalogo.Models.Produto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   }
 ]

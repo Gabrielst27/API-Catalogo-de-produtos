@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace APICatalogo.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ProdutosController : ControllerBase
     {
@@ -17,7 +17,7 @@ namespace APICatalogo.Controllers
         }
 
         //Buscar objeto da classe Produto por id
-        [HttpGet("{id:int}", Name = "ObterProduto")]
+        [HttpGet("{id:int:min(1)}", Name = "ObterProduto")]
         public ActionResult<Produto> GetById(int id)
         {
             try
@@ -35,6 +35,28 @@ namespace APICatalogo.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     "Ocorreu um erro no tratamento da sua solicitação. Contate o suporte.");
+            }
+        }
+
+        //Procurar o primweiro produto
+        [HttpGet("primeiro")]
+        public ActionResult<Produto> GetFirst()
+        {
+            try
+            {
+                var produto = _context.Produtos.AsNoTracking().FirstOrDefault();
+
+                if (produto is null)
+                {
+                    return NotFound("Produto não encontrado");
+                }
+
+                return produto;
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Ocorreu um erro no tratamento da sua solicitação. Contate o suporte");
             }
         }
 
@@ -77,7 +99,7 @@ namespace APICatalogo.Controllers
         }
 
         //Atualizar Produto por id
-        [HttpPut("{id:int}")]
+        [HttpPut("{id:int:min(1)}")]
         public ActionResult Put(int id, Produto produto)
         {
             try
@@ -100,7 +122,7 @@ namespace APICatalogo.Controllers
         }
 
         //Deletar Produto por id
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{id:int:min(1)}")]
         public ActionResult Delete(int id)
         {
             try

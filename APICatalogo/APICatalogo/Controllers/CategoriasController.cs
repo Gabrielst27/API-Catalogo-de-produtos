@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace APICatalogo.Controllers
 {
 
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class CategoriasController : ControllerBase
     {
@@ -18,7 +18,7 @@ namespace APICatalogo.Controllers
         }
 
         //Procurar Categoria por id
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int:min(1)}")]
         public ActionResult<Categoria> GetById(int id)
         {
             try
@@ -37,6 +37,28 @@ namespace APICatalogo.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     "Ocorreu um erro no tratamento da sua solicitação. Contate o suporte.");
+            }
+        }
+
+        //Procurar a primeira Categoria
+        [HttpGet("primeiro")]
+        public ActionResult<Categoria> GetFirst()
+        {
+            try
+            {
+                var categoria = _context.Categorias.AsNoTracking().FirstOrDefault();
+
+                if (categoria is null)
+                {
+                    return NotFound("Categoria não encontrada");
+                }
+
+                return categoria;
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Ocorreu um erro no tratamento de sua solicitação. Contate o suporte");
             }
         }
 
@@ -95,7 +117,7 @@ namespace APICatalogo.Controllers
         }
 
         //Atualizar Categoria por id
-        [HttpPut("{id:int}")]
+        [HttpPut("{id:int:min(1)}")]
         public ActionResult Put(int id, Categoria categoria)
         {
             try
@@ -118,7 +140,7 @@ namespace APICatalogo.Controllers
         }
 
         //Deletar Categoria por id
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{id:int:min(1)}")]
         public ActionResult Delete(int id)
         {
             try
