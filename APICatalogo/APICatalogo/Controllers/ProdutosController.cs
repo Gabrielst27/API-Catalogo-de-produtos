@@ -62,11 +62,11 @@ namespace APICatalogo.Controllers
 
         //Buscar todos os objetos da classe Produto
         [HttpGet]
-        public ActionResult<IEnumerable<Produto>> GetAll(int top)
+        public async Task<ActionResult<IEnumerable<Produto>>> GetAll([FromQuery] int top)
         {
             try
             {
-                return _context.Produtos.AsNoTracking().Take(top).ToList();
+                return await _context.Produtos.AsNoTracking().Take(top).ToListAsync();
             }
             catch (Exception)
             {
@@ -77,7 +77,7 @@ namespace APICatalogo.Controllers
 
         //Inserir novo Produto
         [HttpPost]
-        public ActionResult Post(Produto produto)
+        public ActionResult Post([FromBody] Produto produto)
         {
             try
             {
@@ -100,7 +100,7 @@ namespace APICatalogo.Controllers
 
         //Atualizar Produto por id
         [HttpPut("{id:int:min(1)}")]
-        public ActionResult Put(int id, Produto produto)
+        public ActionResult Put(int id, [FromBody] Produto produto)
         {
             try
             {

@@ -64,11 +64,11 @@ namespace APICatalogo.Controllers
 
         //Procurar todos os objetos da classe Categoria
         [HttpGet]
-        public ActionResult<IEnumerable<Categoria>> GetAll(int top)
+        public async Task<ActionResult<IEnumerable<Categoria>>> GetAll([FromQuery] int top)
         {
             try
             {
-                return _context.Categorias.AsNoTracking().Take(top).ToList();
+                return await _context.Categorias.AsNoTracking().Take(top).ToListAsync();
             }
             catch (Exception)
             {
@@ -79,12 +79,12 @@ namespace APICatalogo.Controllers
 
         //Procurar todas os objetos da classe Categoria e Produto
         [HttpGet("produtos")]
-        public ActionResult<IEnumerable<Categoria>> GetCatProd(int topCategoria, int topProduto)
+        public async Task<ActionResult<IEnumerable<Categoria>>> GetCatProd([FromQuery]int topCategoria, [FromQuery]int topProduto)
         {
             try
             {
-                return _context.Categorias.AsNoTracking().Include(p => p.Produtos
-                    .Take(topProduto)).Take(topCategoria).ToList();
+                return await _context.Categorias.AsNoTracking().Include(p => p.Produtos
+                    .Take(topProduto)).Take(topCategoria).ToListAsync();
             }
             catch (Exception)
             {
@@ -95,7 +95,7 @@ namespace APICatalogo.Controllers
 
         //Inserir nova Categoria
         [HttpPost]
-        public ActionResult Post(Categoria categoria)
+        public ActionResult Post([FromBody]Categoria categoria)
         {
             try
             {
@@ -118,7 +118,7 @@ namespace APICatalogo.Controllers
 
         //Atualizar Categoria por id
         [HttpPut("{id:int:min(1)}")]
-        public ActionResult Put(int id, Categoria categoria)
+        public ActionResult Put(int id, [FromBody]Categoria categoria)
         {
             try
             {
