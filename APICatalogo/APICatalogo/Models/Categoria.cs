@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using APICatalogo.Validations;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Cryptography.X509Certificates;
@@ -17,11 +18,14 @@ namespace APICatalogo.Models
         public int CategoriaId { get; set; }
 
         [Required]
-        [StringLength(100)]
+        [StringLength(100, ErrorMessage = "O nome deve conter entre 2 e 100 caracteres",
+            MinimumLength = 2)]
+        [PrimeiraMaiuscula]
         public string? Nome { get; set; }
 
         [Required]
-        [StringLength(500)]
+        [StringLength(500, ErrorMessage = "O caminho da imagem deve ter entre 10 e 500 caracteres",
+            MinimumLength = 10)]
         public string? ImgUrl { get; set; }
 
         public ICollection<Produto>? Produtos { get; set; }

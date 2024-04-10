@@ -99,9 +99,9 @@ namespace APICatalogo.Controllers
         {
             try
             {
-                if (categoria is null)
+                if (!ModelState.IsValid)
                 {
-                    return BadRequest("Dados inválidos");
+                    return BadRequest(ModelState);
                 }
 
                 _context.Categorias.Add(categoria);

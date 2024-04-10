@@ -81,10 +81,10 @@ namespace APICatalogo.Controllers
         {
             try
             {
-                if (produto is null)
-                {
-                    return BadRequest();
-                }
+                //if (!ModelState.IsValid)
+                //{
+                //    return BadRequest(ModelState);
+                //}
 
                 _context.Produtos.Add(produto);
                 _context.SaveChanges();
