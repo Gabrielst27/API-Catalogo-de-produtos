@@ -1,6 +1,8 @@
 ﻿using APICatalogo.Context;
+using APICatalogo.Filters;
 using APICatalogo.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 namespace APICatalogo.Controllers
@@ -64,6 +66,7 @@ namespace APICatalogo.Controllers
 
         //Procurar todos os objetos da classe Categoria
         [HttpGet]
+        [ServiceFilter(typeof(ApiLoggingFilters))]
         public async Task<ActionResult<IEnumerable<Categoria>>> GetAll([FromQuery] int top)
         {
             try
