@@ -2,7 +2,7 @@
 
 namespace APICatalogo.Filters
 {
-    public class ApiLoggingFilters : IActionFilter
+    public class ApiLoggingFilters : IResultFilter, IActionFilter
     {
         private readonly ILogger<ApiLoggingFilters> _logger;
         
@@ -11,29 +11,34 @@ namespace APICatalogo.Filters
             _logger = logger;
         }
         
-        //Antes do método Action
-        public void OnActionExecuting(ActionExecutingContext context)
+        public void OnResultExecuting(ResultExecutingContext context)
         {
-            _logger.LogInformation("### Executando --> OnActionExecuting");
-            _logger.LogInformation("#########################################");
-            string data = DateTime.Now.ToString();
-            string[] vetdata = data.Split(" ");
-            _logger.LogInformation($"Data: {vetdata[0]} às {DateTime.Now.ToLongTimeString()}");
-            _logger.LogInformation($"ModelState: {context.ModelState.IsValid}");
-            _logger.LogInformation("#########################################");
+            int a = 0;
         }
 
-        //Depois do método Action
-        public void OnActionExecuted(ActionExecutedContext context)
+        //Resposta
+        public void OnResultExecuted(ResultExecutedContext context)
         {
-            _logger.LogInformation("### Executado --> OnActionExecuted");
-            _logger.LogInformation("#########################################");
+            _logger.LogInformation("######## Resposta ########");
             string data = DateTime.Now.ToString();
             string[] vetdata = data.Split(" ");
             _logger.LogInformation($"Data: {vetdata[0]} às {DateTime.Now.ToLongTimeString()}");
             _logger.LogInformation($"StatusCode: {context.HttpContext.Response.StatusCode}");
-            _logger.LogInformation("#########################################");
         }
 
+        //Antes da ação
+        public void OnActionExecuting(ActionExecutingContext context)
+        {
+            _logger.LogInformation("######## Início da ação ########");
+            string data = DateTime.Now.ToString();
+            string[] vetdata = data.Split(" ");
+            _logger.LogInformation($"Data: {vetdata[0]} às {DateTime.Now.ToLongTimeString()}");
+            _logger.LogInformation($"ModelState: {context.ModelState.IsValid}");
+        }
+
+        public void OnActionExecuted(ActionExecutedContext context)
+        {
+            int a = 0;
+        }
     }
 }

@@ -13,16 +13,20 @@ namespace APICatalogo.Controllers
     public class CategoriasController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly ILogger<CategoriasController> _logger;
 
-        public CategoriasController(AppDbContext context)
+        public CategoriasController(AppDbContext context, ILogger<CategoriasController> logger)
         {
+            _logger = logger;
             _context = context;
         }
 
         //Procurar Categoria por id
         [HttpGet("{id:int:min(1)}")]
+        [ServiceFilter(typeof(ApiLoggingFilters))]
         public ActionResult<Categoria> GetById(int id)
         {
+            _logger.LogInformation("======================== Get/Categorias/Id ===========================");
             try
             {
                 var categoria = _context.Categorias.AsNoTracking()
@@ -32,7 +36,6 @@ namespace APICatalogo.Controllers
                 {
                     return NotFound("Categoria não encontrada");
                 }
-
                 return categoria;
             }
             catch (Exception)
@@ -44,8 +47,10 @@ namespace APICatalogo.Controllers
 
         //Procurar a primeira Categoria
         [HttpGet("primeiro")]
+        [ServiceFilter(typeof(ApiLoggingFilters))]
         public ActionResult<Categoria> GetFirst()
         {
+            _logger.LogInformation("===================== Get/Categorias/Primeiro ========================");
             try
             {
                 var categoria = _context.Categorias.AsNoTracking().FirstOrDefault();
@@ -69,6 +74,7 @@ namespace APICatalogo.Controllers
         [ServiceFilter(typeof(ApiLoggingFilters))]
         public async Task<ActionResult<IEnumerable<Categoria>>> GetAll([FromQuery] int top)
         {
+            _logger.LogInformation("========================= Get/Categorias =============================");
             try
             {
                 return await _context.Categorias.AsNoTracking().Take(top).ToListAsync();
@@ -82,8 +88,10 @@ namespace APICatalogo.Controllers
 
         //Procurar todas os objetos da classe Categoria e Produto
         [HttpGet("produtos")]
+        [ServiceFilter(typeof(ApiLoggingFilters))]
         public async Task<ActionResult<IEnumerable<Categoria>>> GetCatProd([FromQuery]int topCategoria, [FromQuery]int topProduto)
         {
+            _logger.LogInformation("===================== Get/Categorias/Produtos ========================");
             try
             {
                 return await _context.Categorias.AsNoTracking().Include(p => p.Produtos
@@ -98,8 +106,10 @@ namespace APICatalogo.Controllers
 
         //Inserir nova Categoria
         [HttpPost]
+        [ServiceFilter(typeof(ApiLoggingFilters))]
         public ActionResult Post([FromBody]Categoria categoria)
         {
+            _logger.LogInformation("========================== Post/Categorias ===========================");
             try
             {
                 if (!ModelState.IsValid)
@@ -121,8 +131,10 @@ namespace APICatalogo.Controllers
 
         //Atualizar Categoria por id
         [HttpPut("{id:int:min(1)}")]
+        [ServiceFilter(typeof(ApiLoggingFilters))]
         public ActionResult Put(int id, [FromBody]Categoria categoria)
         {
+            _logger.LogInformation("========================== Put/Categorias ============================");
             try
             {
                 if (id != categoria.CategoriaId)
@@ -144,8 +156,10 @@ namespace APICatalogo.Controllers
 
         //Deletar Categoria por id
         [HttpDelete("{id:int:min(1)}")]
+        [ServiceFilter(typeof(ApiLoggingFilters))]
         public ActionResult Delete(int id)
         {
+            _logger.LogInformation("========================= Delete/Categorias ==========================");
             try
             {
                 var categoria = _context.Categorias.Find(id);
