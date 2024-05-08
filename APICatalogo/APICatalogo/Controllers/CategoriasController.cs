@@ -23,162 +23,114 @@ namespace APICatalogo.Controllers
 
         //Procurar Categoria por id
         [HttpGet("{id:int:min(1)}")]
-        [ServiceFilter(typeof(ApiLoggingFilters))]
+        [ServiceFilter(typeof(ApiLoggingFilter))]
         public ActionResult<Categoria> GetById(int id)
         {
+            throw new ArgumentException("Ocorreu um erro no tratamento do request");
             _logger.LogInformation("======================== Get/Categorias/Id ===========================");
-            try
-            {
-                var categoria = _context.Categorias.AsNoTracking()
-                    .FirstOrDefault(p => p.CategoriaId == id);
+            
+            var categoria = _context.Categorias.AsNoTracking()
+                .FirstOrDefault(p => p.CategoriaId == id);
 
-                if (categoria is null)
-                {
-                    return NotFound("Categoria não encontrada");
-                }
-                return categoria;
-            }
-            catch (Exception)
+            if (categoria is null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Ocorreu um erro no tratamento da sua solicitação. Contate o suporte.");
+                return NotFound("Categoria não encontrada");
             }
+            return categoria;
         }
 
         //Procurar a primeira Categoria
         [HttpGet("primeiro")]
-        [ServiceFilter(typeof(ApiLoggingFilters))]
+        [ServiceFilter(typeof(ApiLoggingFilter))]
         public ActionResult<Categoria> GetFirst()
         {
             _logger.LogInformation("===================== Get/Categorias/Primeiro ========================");
-            try
-            {
-                var categoria = _context.Categorias.AsNoTracking().FirstOrDefault();
+            
+            var categoria = _context.Categorias.AsNoTracking().FirstOrDefault();
 
-                if (categoria is null)
-                {
-                    return NotFound("Categoria não encontrada");
-                }
-
-                return categoria;
-            }
-            catch (Exception)
+            if (categoria is null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Ocorreu um erro no tratamento de sua solicitação. Contate o suporte");
+                return NotFound("Categoria não encontrada");
             }
+
+            return categoria;
         }
 
         //Procurar todos os objetos da classe Categoria
         [HttpGet]
-        [ServiceFilter(typeof(ApiLoggingFilters))]
+        [ServiceFilter(typeof(ApiLoggingFilter))]
         public async Task<ActionResult<IEnumerable<Categoria>>> GetAll([FromQuery] int top)
         {
             _logger.LogInformation("========================= Get/Categorias =============================");
-            try
-            {
-                return await _context.Categorias.AsNoTracking().Take(top).ToListAsync();
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Ocorreu um erro no tratamento da sua solicitação. Contate o suporte.");
-            }
+            
+            return await _context.Categorias.AsNoTracking().Take(top).ToListAsync();
         }
 
         //Procurar todas os objetos da classe Categoria e Produto
         [HttpGet("produtos")]
-        [ServiceFilter(typeof(ApiLoggingFilters))]
+        [ServiceFilter(typeof(ApiLoggingFilter))]
         public async Task<ActionResult<IEnumerable<Categoria>>> GetCatProd([FromQuery]int topCategoria, [FromQuery]int topProduto)
         {
             _logger.LogInformation("===================== Get/Categorias/Produtos ========================");
-            try
-            {
-                return await _context.Categorias.AsNoTracking().Include(p => p.Produtos
-                    .Take(topProduto)).Take(topCategoria).ToListAsync();
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Ocorreu um erro no tratamento da sua solicitação. Contate o suporte.");
-            }
+            
+            return await _context.Categorias.AsNoTracking().Include(p => p.Produtos
+                .Take(topProduto)).Take(topCategoria).ToListAsync();
         }
 
         //Inserir nova Categoria
         [HttpPost]
-        [ServiceFilter(typeof(ApiLoggingFilters))]
+        [ServiceFilter(typeof(ApiLoggingFilter))]
         public ActionResult Post([FromBody]Categoria categoria)
         {
             _logger.LogInformation("========================== Post/Categorias ===========================");
-            try
+            
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                _context.Categorias.Add(categoria);
-                _context.SaveChanges();
-
-                return Ok(categoria);
+                return BadRequest(ModelState);
             }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Ocorreu um erro no tratamento da sua solicitação. Contate o suporte.");
-            }
+
+            _context.Categorias.Add(categoria);
+            _context.SaveChanges();
+
+            return Ok(categoria);
         }
 
         //Atualizar Categoria por id
         [HttpPut("{id:int:min(1)}")]
-        [ServiceFilter(typeof(ApiLoggingFilters))]
+        [ServiceFilter(typeof(ApiLoggingFilter))]
         public ActionResult Put(int id, [FromBody]Categoria categoria)
         {
             _logger.LogInformation("========================== Put/Categorias ============================");
-            try
+            
+            if (id != categoria.CategoriaId)
             {
-                if (id != categoria.CategoriaId)
-                {
-                    return BadRequest("Dados inválidos");
-                }
-
-                _context.Update(categoria);
-                _context.SaveChanges();
-
-                return Ok(categoria);
+                return BadRequest("Dados inválidos");
             }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Ocorreu um erro no tratamento da sua solicitação. Contate o suporte.");
-            }
+
+            _context.Update(categoria);
+            _context.SaveChanges();
+            return Ok(categoria);
         }
 
         //Deletar Categoria por id
         [HttpDelete("{id:int:min(1)}")]
-        [ServiceFilter(typeof(ApiLoggingFilters))]
+        [ServiceFilter(typeof(ApiLoggingFilter))]
         public ActionResult Delete(int id)
         {
             _logger.LogInformation("========================= Delete/Categorias ==========================");
-            try
+            
+            var categoria = _context.Categorias.Find(id);
+
+            if (categoria is null)
             {
-                var categoria = _context.Categorias.Find(id);
-
-                if (categoria is null)
-                {
-                    return NotFound("Categoria não encontrada");
-                }
-
-                _context.Remove(categoria);
-                _context.SaveChanges();
-
-                return Ok(categoria);
+                _logger.LogWarning($"Categoria com id={id} não encontrada");
+                return NotFound($"Categoria com id={id} não encontrada");
             }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Ocorreu um erro no tratamento da sua solicitação. Contate o suporte.");
-            }
+
+            _context.Remove(categoria);
+            _context.SaveChanges();
+
+            return Ok(categoria);
         }
     }
 }

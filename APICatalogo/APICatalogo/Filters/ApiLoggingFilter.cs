@@ -2,11 +2,11 @@
 
 namespace APICatalogo.Filters
 {
-    public class ApiLoggingFilters : IResultFilter, IActionFilter
+    public class ApiLoggingFilter : IResultFilter, IActionFilter
     {
-        private readonly ILogger<ApiLoggingFilters> _logger;
+        private readonly ILogger<ApiLoggingFilter> _logger;
         
-        public ApiLoggingFilters(ILogger<ApiLoggingFilters> logger)
+        public ApiLoggingFilter(ILogger<ApiLoggingFilter> logger)
         {
             _logger = logger;
         }
