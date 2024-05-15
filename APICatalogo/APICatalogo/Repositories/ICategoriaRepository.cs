@@ -1,5 +1,4 @@
 ﻿using APICatalogo.Models;
-using System.Runtime.InteropServices;
 
 namespace APICatalogo.Repositories
 {
@@ -7,7 +6,8 @@ namespace APICatalogo.Repositories
     {
         IEnumerable<Categoria> GetCategorias();
         Categoria GetCategoria(int id);
-        Categoria Create(Categoria categoria);
+        IEnumerable<Categoria> GetCategoriasProdutos();
+        Categoria Insert(Categoria categoria);
         Categoria Update(Categoria categoria);
         Categoria Delete(int id);
     }

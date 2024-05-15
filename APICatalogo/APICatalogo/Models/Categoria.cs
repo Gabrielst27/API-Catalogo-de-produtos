@@ -25,7 +25,7 @@ namespace APICatalogo.Models
 
         [Required]
         [StringLength(500, ErrorMessage = "O caminho da imagem deve ter entre 10 e 500 caracteres",
-            MinimumLength = 10)]
+            MinimumLength = 5)]
         public string? ImgUrl { get; set; }
 
         public ICollection<Produto>? Produtos { get; set; }

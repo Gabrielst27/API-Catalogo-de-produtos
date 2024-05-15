@@ -23,7 +23,7 @@ namespace APICatalogo.Repositories
             return _context.Categorias.AsNoTracking().FirstOrDefault(c => c.CategoriaId == id);
         }
 
-        public Categoria Create(Categoria categoria)
+        public Categoria Insert(Categoria categoria)
         {
             if (categoria is null)
                 throw new ArgumentNullException(nameof(categoria));
@@ -53,6 +53,11 @@ namespace APICatalogo.Repositories
             _context.Categorias.Remove(categoria);
             _context.SaveChanges();
             return categoria;
+        }
+
+        IEnumerable<Categoria> ICategoriaRepository.GetCategoriasProdutos()
+        {
+            return _context.Categorias.AsNoTracking().Include(p => p.Produtos).ToList();
         }
     }
 }
