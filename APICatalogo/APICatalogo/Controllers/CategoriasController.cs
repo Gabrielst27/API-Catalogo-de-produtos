@@ -72,26 +72,20 @@ namespace APICatalogo.Controllers
 
             _repository.Insert(categoria);
 
-            return Ok(categoria);
+            return Ok("Dados inseridos: " + categoria);
         }
 
         //Atualizar Categoria por id
-        [HttpPut("{id:int:min(1)}")]
+        [HttpPut]
         [ServiceFilter(typeof(ApiLoggingFilter))]
-        public ActionResult Put(int id, [FromBody]Categoria categoria)
+        public ActionResult Put([FromBody]Categoria categoria)
         {
             _logger.LogInformation("========================== Put/Categorias ============================");
-            
-            if (id != categoria.CategoriaId)
-            {
-                _logger.LogWarning($"Dados inválidos");
-                return BadRequest("Dados inválidos");
-            }
 
-            var categoriaAntiga = _repository.GetCategoria(id);
+            var categoriaAntiga = _repository.GetCategoria(categoria.CategoriaId);
             _repository.Update(categoria);
 
-            return Ok(categoriaAntiga);
+            return Ok("Dados antigos: " + categoriaAntiga);
         }
 
         //Deletar Categoria por id
@@ -111,7 +105,7 @@ namespace APICatalogo.Controllers
 
             var categoriaDeletada = _repository.Delete(id);
 
-            return Ok(categoriaDeletada);
+            return Ok("Dados excluídos: " + categoriaDeletada);
         }
     }
 }

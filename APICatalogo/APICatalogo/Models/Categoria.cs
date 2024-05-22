@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Security.Cryptography.X509Certificates;
+using System.Text.Json.Serialization;
 
 namespace APICatalogo.Models
 {
@@ -28,6 +28,7 @@ namespace APICatalogo.Models
             MinimumLength = 5)]
         public string? ImgUrl { get; set; }
 
+        [JsonIgnore]
         public ICollection<Produto>? Produtos { get; set; }
 
     }

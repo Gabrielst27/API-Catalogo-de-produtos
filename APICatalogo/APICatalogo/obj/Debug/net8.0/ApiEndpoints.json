@@ -43,6 +43,22 @@
   },
   {
     "ContainingType": "APICatalogo.Controllers.CategoriasController",
+    "Method": "Put",
+    "RelativePath": "api/Categorias",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "categoria",
+        "Type": "APICatalogo.Models.Categoria",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "APICatalogo.Controllers.CategoriasController",
     "Method": "GetById",
     "RelativePath": "api/Categorias/{id}",
     "HttpMethod": "GET",
@@ -66,27 +82,6 @@
         "StatusCode": 200
       }
     ]
-  },
-  {
-    "ContainingType": "APICatalogo.Controllers.CategoriasController",
-    "Method": "Put",
-    "RelativePath": "api/Categorias/{id}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "categoria",
-        "Type": "APICatalogo.Models.Categoria",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
   },
   {
     "ContainingType": "APICatalogo.Controllers.CategoriasController",
