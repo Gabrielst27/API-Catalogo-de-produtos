@@ -1,7 +1,8 @@
-﻿using APICatalogo.Context;
+﻿using APICatalogo.Filters;
 using APICatalogo.Models;
+using APICatalogo.Repositories;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace APICatalogo.Controllers
 {
@@ -9,94 +10,63 @@ namespace APICatalogo.Controllers
     [ApiController]
     public class ProdutosController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IProdutoRepository _repository;
+        private readonly ILogger _logger;
 
-        public ProdutosController(AppDbContext context)
+        public ProdutosController(IProdutoRepository repository, ILogger logger)
         {
-            _context = context;
+            _repository = repository;
+            _logger = logger;
         }
 
-        //Buscar objeto da classe Produto por id
-        [HttpGet("{id:int:min(1)}", Name = "ObterProduto")]
+        [HttpGet("{id:int:min(1)}")]
+        [ServiceFilter(typeof(ApiLoggingFilter))]
         public ActionResult<Produto> GetById(int id)
         {
-            
-            var produto = _context.Produtos.AsNoTracking().FirstOrDefault(p => p.ProdutoId == id);
+            _logger.LogInformation("========================= Get/Produtos/Id ============================");
+
+            var produto = _repository.GetProduto(id);
 
             if (produto is null)
             {
-                return NotFound("Produto não encontrado");
+                return NotFound("Produto não encontrada");
             }
 
-            return produto;
+            return Ok(produto);
         }
 
-        //Procurar o primweiro produto
-        [HttpGet("primeiro")]
-        public ActionResult<Produto> GetFirst()
-        {
-            var produto = _context.Produtos.AsNoTracking().FirstOrDefault();
-
-            if (produto is null)
-            {
-                return NotFound("Produto não encontrado");
-            }
-
-            return produto;
-        }
-
-        //Buscar todos os objetos da classe Produto
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Produto>>> GetAll([FromQuery] int top)
+        [ServiceFilter(typeof(ApiLoggingFilter))]
+        public ActionResult<IEnumerable<Produto>> Get()
         {
-            return await _context.Produtos.AsNoTracking().Take(top).ToListAsync();
+            _logger.LogInformation("========================== Get/Produtos ==============================");
+
+            var produtos = _repository.GetProdutos();
+
+            return Ok(produtos);
         }
 
-        //Inserir novo Produto
         [HttpPost]
-        public ActionResult Post([FromBody] Produto produto)
+        [ServiceFilter(typeof(ApiLoggingFilter))]
+        public ActionResult<Produto> Post([FromBody] Produto produto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            _logger.LogInformation("========================== Post/Produtos =============================");
 
-            _context.Produtos.Add(produto);
-            _context.SaveChanges();
-
-            return new CreatedAtRouteResult("ObterProduto", new { id = produto.ProdutoId }, produto);
-        }
-
-        //Atualizar Produto por id
-        [HttpPut("{id:int:min(1)}")]
-        public ActionResult Put(int id, [FromBody] Produto produto)
-        {
-            if (id != produto.ProdutoId)
-            {
-                return BadRequest();
-            }
-
-            _context.Update(produto);
-            _context.SaveChanges();
+            var prod = _repository.Insert(produto);
 
             return Ok(produto);
+
         }
 
-        //Deletar Produto por id
-        [HttpDelete("{id:int:min(1)}")]
-        public ActionResult Delete(int id)
+        [HttpPut]
+        [ServiceFilter(typeof(ApiLoggingFilter))]
+        public ActionResult<Produto> Put([FromBody] Produto produto)
         {
-            var produto = _context.Produtos.Find(id);
+            _logger.LogInformation("=========================== Put/Produtos =============================");
 
-            if (produto is null)
-            {
-                return NotFound("Produto não encontrado");
-            }
+            var prod = _repository.Update(produto);
 
-            _context.Remove(produto);
-            _context.SaveChanges();
-
-            return Ok(produto);
+            return Ok(prod);
         }
     }
 }
