@@ -11,9 +11,9 @@ namespace APICatalogo.Controllers
     public class ProdutosController : ControllerBase
     {
         private readonly IProdutoRepository _repository;
-        private readonly ILogger _logger;
+        private readonly ILogger<ProdutosController> _logger;
 
-        public ProdutosController(IProdutoRepository repository, ILogger logger)
+        public ProdutosController(IProdutoRepository repository, ILogger<ProdutosController> logger)
         {
             _repository = repository;
             _logger = logger;
@@ -46,6 +46,18 @@ namespace APICatalogo.Controllers
             return Ok(produtos);
         }
 
+        [HttpGet("categorias")]
+        [ServiceFilter(typeof(ApiLoggingFilter))]
+        public ActionResult<IEnumerable<Produto>> GetProdCat(int id)
+        {
+            _logger.LogInformation("===================== Get/Produtos/Categoria =========================");
+
+            var produtos = _repository.GetProdutosCategoria(id);
+
+            return Ok(produtos);
+        }
+
+
         [HttpPost]
         [ServiceFilter(typeof(ApiLoggingFilter))]
         public ActionResult<Produto> Post([FromBody] Produto produto)
@@ -67,6 +79,17 @@ namespace APICatalogo.Controllers
             var prod = _repository.Update(produto);
 
             return Ok(prod);
+        }
+
+        [HttpDelete]
+        [ServiceFilter(typeof(ApiLoggingFilter))]
+        public ActionResult<Produto> Delete(int id)
+        {
+            _logger.LogInformation("========================== Delete/Produtos ===========================");
+
+            var produto = _repository.Delete(id);
+
+            return Ok(produto);
         }
     }
 }

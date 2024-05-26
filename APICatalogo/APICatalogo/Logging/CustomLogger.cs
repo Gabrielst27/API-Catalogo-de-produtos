@@ -1,12 +1,12 @@
 ﻿
 namespace APICatalogo.Logging
 {
-    public class CustomerLogger : ILogger
+    public class CustomLogger : ILogger
     {
         readonly string loggerName;
         public readonly CustomLoggerProviderConfiguration loggerConfig;
 
-        public CustomerLogger(string name, CustomLoggerProviderConfiguration config)
+        public CustomLogger(string name, CustomLoggerProviderConfiguration config)
         {
             loggerName = name;
             loggerConfig = config;

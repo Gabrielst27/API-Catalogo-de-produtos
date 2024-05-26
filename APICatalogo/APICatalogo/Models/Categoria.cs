@@ -28,7 +28,6 @@ namespace APICatalogo.Models
             MinimumLength = 5)]
         public string? ImgUrl { get; set; }
 
-        [JsonIgnore]
         public ICollection<Produto>? Produtos { get; set; }
 
     }

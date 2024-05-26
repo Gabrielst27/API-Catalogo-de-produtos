@@ -23,6 +23,19 @@ namespace APICatalogo.Repositories
             return _context.Produtos.AsNoTracking().ToList();
         }
 
+        public IEnumerable<Produto> GetProdutosCategoria(int id)
+        {
+            var categoria = _context.Categorias.AsNoTracking().FirstOrDefault(c => c.CategoriaId == id);
+            if (categoria is null)
+            {
+                throw new ArgumentNullException(nameof(categoria));
+            }
+
+            return _context.Produtos.AsNoTracking().Where(p => p.CategoriaId == id);
+
+
+        }
+
         public Produto Insert(Produto produto)
         {
             if(produto is null)

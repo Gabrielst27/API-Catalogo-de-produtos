@@ -6,6 +6,7 @@ namespace APICatalogo.Repositories
     {
         public IEnumerable<Produto> GetProdutos();
         public Produto GetProduto(int id);
+        public IEnumerable<Produto> GetProdutosCategoria(int id);
         public Produto Insert(Produto produto);
         public Produto Update(Produto produto);
         public Produto Delete(int id);
