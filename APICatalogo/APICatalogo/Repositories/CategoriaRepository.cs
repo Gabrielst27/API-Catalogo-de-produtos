@@ -6,13 +6,12 @@ namespace APICatalogo.Repositories
 {
     public class CategoriaRepository : Repository<Categoria>, ICategoriaRepository
     {
-        private readonly AppDbContext _context;
-
         public CategoriaRepository(AppDbContext context) : base(context) {}
 
         IEnumerable<Categoria> ICategoriaRepository.GetCategoriasProdutos()
         {
-            return _context.Categorias.AsNoTracking().Include(p => p.Produtos).ToList();
+            return _context.Categorias.Where(p =>  p.Produtos.Any()).ToList();
+            
         }
     }
 }

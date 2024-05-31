@@ -25,11 +25,12 @@ namespace APICatalogo.Controllers
         {
             _logger.LogInformation("========================= Get/Produtos/Id ============================");
 
-            var produto = _repository.GetProduto(id);
+            var produto = _repository.Get(p => p.ProdutoId == id);
 
             if (produto is null)
             {
-                return NotFound("Produto não encontrada");
+                _logger.LogWarning($"Produto com id={id} não encontrado");
+                return NotFound("Produto não encontrado");
             }
 
             return Ok(produto);
@@ -41,7 +42,7 @@ namespace APICatalogo.Controllers
         {
             _logger.LogInformation("========================== Get/Produtos ==============================");
 
-            var produtos = _repository.GetProdutos();
+            var produtos = _repository.GetAll();
 
             return Ok(produtos);
         }
@@ -64,7 +65,13 @@ namespace APICatalogo.Controllers
         {
             _logger.LogInformation("========================== Post/Produtos =============================");
 
-            var prod = _repository.Insert(produto);
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("Dados inválidos");
+                return BadRequest(ModelState);
+            }
+
+            _repository.Create(produto);
 
             return Ok(produto);
 
@@ -76,9 +83,17 @@ namespace APICatalogo.Controllers
         {
             _logger.LogInformation("=========================== Put/Produtos =============================");
 
-            var prod = _repository.Update(produto);
+            if (!ModelState.IsValid)
+            {
+                _logger.LogInformation("Dados inválidos");
+                return BadRequest(ModelState);
+            }
 
-            return Ok(prod);
+            var produtoAntigo = _repository.Get(p => p.ProdutoId == produto.ProdutoId);
+
+            _repository.Update(produto);
+
+            return Ok($"Dados antigos: {produtoAntigo}; Dados atualizados: {produto}");
         }
 
         [HttpDelete]
@@ -87,9 +102,16 @@ namespace APICatalogo.Controllers
         {
             _logger.LogInformation("========================== Delete/Produtos ===========================");
 
-            var produto = _repository.Delete(id);
+            var produto = _repository.Get(p => p.ProdutoId == id);
 
-            return Ok(produto);
+            if(produto is null)
+            {
+                return NotFound("Produto não encontrado");
+            }
+
+            _repository.Delete(produto);
+
+            return Ok($"Dados excluídos: {produto.ToString}");
         }
     }
 }

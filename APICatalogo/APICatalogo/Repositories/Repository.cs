@@ -7,19 +7,19 @@ namespace APICatalogo.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        private readonly AppDbContext _context;
+        protected readonly AppDbContext _context;
 
         public Repository(AppDbContext context)
         {
             _context = context;
         }
 
-        public T? Find(Expression<Func<T, bool>> predicate)
+        public T? Get(Expression<Func<T, bool>> predicate)
         {
             return _context.Set<T>().AsNoTracking().FirstOrDefault(predicate);
         }
 
-        public IEnumerable<T> FindAll()
+        public IEnumerable<T> GetAll()
         {
             return _context.Set<T>().AsNoTracking().ToList();
         }

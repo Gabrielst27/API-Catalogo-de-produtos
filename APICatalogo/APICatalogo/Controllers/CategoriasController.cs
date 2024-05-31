@@ -26,10 +26,11 @@ namespace APICatalogo.Controllers
         {
             _logger.LogInformation("======================== Get/Categorias/Id ===========================");
 
-            var categoria = _repository.GetCategoria(id);
+            var categoria = _repository.Get(c => c.CategoriaId == id);
 
             if (categoria is null)
             {
+                _logger.LogWarning($"Categoria com id={id} não encontrada");
                 return NotFound("Categoria não encontrada");
             }
             return Ok(categoria);
@@ -38,11 +39,11 @@ namespace APICatalogo.Controllers
         //Procurar todos os objetos da classe Categoria
         [HttpGet]
         [ServiceFilter(typeof(ApiLoggingFilter))]
-        public ActionResult<IEnumerable<Categoria>> GetAll([FromQuery] int top)
+        public ActionResult<IEnumerable<Categoria>> GetAll()
         {
             _logger.LogInformation("========================= Get/Categorias =============================");
 
-            var categorias = _repository.GetCategorias();
+            var categorias = _repository.GetAll();
             return Ok(categorias);
         }
 
@@ -66,11 +67,11 @@ namespace APICatalogo.Controllers
             
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning($"Dados inválidos");
+                _logger.LogWarning("Dados inválidos");
                 return BadRequest(ModelState);
             }
 
-            _repository.Insert(categoria);
+            _repository.Create(categoria);
 
             return Ok("Dados inseridos: " + categoria);
         }
@@ -82,10 +83,17 @@ namespace APICatalogo.Controllers
         {
             _logger.LogInformation("========================== Put/Categorias ============================");
 
-            var categoriaAntiga = _repository.GetCategoria(categoria.CategoriaId);
+            var categoriaAntiga = _repository.Get(c => c.CategoriaId == categoria.CategoriaId);
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning($"Categoria com id={categoria.CategoriaId} não encontrada");
+                return BadRequest(ModelState);
+            }
+
             _repository.Update(categoria);
 
-            return Ok("Dados antigos: " + categoriaAntiga);
+            return Ok($"Dados antigos: {categoriaAntiga}; Dados atualizados: {categoria}");
         }
 
         //Deletar Categoria por id
@@ -95,17 +103,17 @@ namespace APICatalogo.Controllers
         {
             _logger.LogInformation("========================= Delete/Categorias ==========================");
 
-            var categoria = _repository.GetCategoria(id);
+            var categoria = _repository.Get(c => c.CategoriaId == id);
 
             if (categoria is null)
             {
                 _logger.LogWarning($"Categoria com id={id} não encontrada");
-                return NotFound($"Categoria com id={id} não encontrada");
+                return NotFound($"Categoria com não encontrada");
             }
 
-            var categoriaDeletada = _repository.Delete(id);
+            _repository.Delete(categoria);
 
-            return Ok("Dados excluídos: " + categoriaDeletada);
+            return Ok("Dados excluídos: " + categoria);
         }
     }
 }
